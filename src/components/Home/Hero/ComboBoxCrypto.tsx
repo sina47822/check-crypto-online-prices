@@ -1,8 +1,6 @@
-"use client"
-
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
-import {cryptoes} from '@/constant/cryptoPrice'
+import { cryptoes } from '@/constant/cryptoPrice'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,9 +17,24 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function ComboboxCrypto() {
+interface ComboboxCryptoProps {
+  onSelect: (crypto: string, price: number) => void // Define the onSelect prop
+}
+
+export function ComboboxCrypto({ onSelect }: ComboboxCryptoProps) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
+
+  // Handle selection and call the onSelect function passed from the parent
+  const handleSelect = (currentValue: string) => {
+    setValue(currentValue === value ? "" : currentValue)
+    setOpen(false)
+
+    const selectedCrypto = cryptoes.find((crypto) => crypto.value === currentValue)
+    if (selectedCrypto) {
+      onSelect(currentValue, selectedCrypto.price) // Pass the selected crypto value and its price
+    }
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -30,7 +43,7 @@ export function ComboboxCrypto() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[100px] justify-between"
+          className="w-[200px] h-[70px] justify-between"
         >
           {value
             ? cryptoes.find((framework) => framework.value === value)?.label
@@ -48,10 +61,7 @@ export function ComboboxCrypto() {
                 <CommandItem
                   key={framework.value}
                   value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
+                  onSelect={() => handleSelect(framework.value)} // Use handleSelect for the onSelect logic
                 >
                   <Check
                     className={cn(

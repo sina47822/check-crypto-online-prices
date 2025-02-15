@@ -1,6 +1,7 @@
 import { navLinks } from '@/constant/navlinks'
 import Link from 'next/link'
 import React from 'react'
+import { CgClose } from 'react-icons/cg'
 
 type Props = {
     showNav: boolean;

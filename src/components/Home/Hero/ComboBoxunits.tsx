@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
-import {Units} from '@/constant/units'
+import { Units } from '@/constant/units'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,9 +19,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function ComboboxUnits() {
+interface ComboboxUnitsProps {
+  onSelect: (unit: string) => void // Accept an onSelect prop to handle the unit selection
+}
+
+export function ComboboxUnits({ onSelect }: ComboboxUnitsProps) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
+
+  // Handle selection of a unit and trigger the onSelect callback
+  const handleSelect = (currentValue: string) => {
+    setValue(currentValue === value ? "" : currentValue)
+    setOpen(false)
+    onSelect(currentValue) // Trigger the onSelect function with the selected unit
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -30,36 +41,33 @@ export function ComboboxUnits() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[100px] justify-between"
+          className="w-[200px] h-[70px] justify-between"
         >
           {value
-            ? Units.find((framework) => framework.value === value)?.label
+            ? Units.find((unit) => unit.value === value)?.label
             : "USD"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput placeholder="Search unit..." />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No unit found.</CommandEmpty>
             <CommandGroup>
-              {Units.map((framework) => (
+              {Units.map((unit) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
+                  key={unit.value}
+                  value={unit.value}
+                  onSelect={() => handleSelect(unit.value)} // Use handleSelect for the onSelect logic
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      value === unit.value ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {framework.label}
+                  {unit.label}
                 </CommandItem>
               ))}
             </CommandGroup>
