@@ -34,3 +34,63 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Whats install in this project
+
+nextjs #in this folder
+```npx create-next-app@latest ./``` 
+typescript
+tailwindcss
+shadcn #new-york,neutral,yes for the css variables.
+```npx shadcn@latest init```
+
+## add darkmode with shadcn
+Start by installing next-themes:
+
+```npm install next-themes```
+
+\\ components/theme-provider.tsx
+```
+"use client"
+ 
+import * as React from "react"
+import { ThemeProvider as NextThemesProvider } from "next-themes"
+ 
+export function ThemeProvider({
+  children,
+  ...props
+}: React.ComponentProps<typeof NextThemesProvider>) {
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+}
+```
+
+\\ app/layout.tsx
+
+```
+import { ThemeProvider } from "@/components/theme-provider"
+
+export default function RootLayout({ children }: RootLayoutProps) {
+  return (
+    <>
+      <html lang="en" suppressHydrationWarning>
+        <head />
+        <body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
+    </>
+  )
+}
+
+```
+
+## react Icons
+
+```npm install react-icons --save```
